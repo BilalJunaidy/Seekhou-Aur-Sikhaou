@@ -40,3 +40,6 @@ class Section(models.Model):
     teacher = models.ForeignKey('User', on_delete=models.CASCADE, related_name="sections")
 
 
+
+
+
