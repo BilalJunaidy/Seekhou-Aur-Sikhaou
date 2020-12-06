@@ -23,10 +23,19 @@ class User(AbstractUser):
         ('GRADE12','Grade 12'),
         ('GRADE13','Grade 13'),   
     ]
-    type = models.CharField(max_length=7, choices=TYPE_OPTIONS, default='STUDENT', blank=False)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name="users")
     profile_image = models.ImageField()
     grade_level = models.CharField(max_length=7, choices=GRADE_OPTIONS, blank=False, default='GRADE5')
+
+class Student(User):
+    type = models.CharField(max_length=7, default='STUDENT', blank=False)
+    parent = models.ForeignKey('Parent', on_delete=models.CASCADE, null=True, blank=True, related_name="students")
+
+class Parent(User):
+    type = models.CharField(max_length=7, default='PARENT', blank=False)
+
+class Teacher(User):
+    type = models.CharField(max_length=7, default='TEACHER', blank=False)
+
 
 class Course(models.Model):
     name = models.CharField(max_length = 150)
