@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.db import IntegrityError
 
-from .models import User, Course, Section, Lecture
+from .models import User, Course, Section, Lecture, Attendance, Lecture_Note, Comment, Assignment, Submission, Mark
 
 # Create your views here.
 
@@ -15,7 +15,7 @@ def index(request):
     class userform(ModelForm):
         class Meta:
             model = User
-            fields = ['username','password','first_name','last_name','email','type','parent']
+            fields = ['username','password','first_name','last_name','email','type','parent', 'grade_level', 'profile_image', 'is_staff']
     
     class courseform(ModelForm):
         class Meta:
@@ -32,11 +32,48 @@ def index(request):
             model = Lecture 
             fields = '__all__'
     
+    class attendanceform(ModelForm):
+        class Meta:
+            model = Attendance
+            fields = '__all__'
+    
+    class lecturenoteform(ModelForm):
+        class Meta:
+            model = Lecture_Note
+            fields = '__all__'
+    
+    class commentform(ModelForm):
+        class Meta:
+            model = Comment
+            fields = '__all__'
+    
+    class assignmentform(ModelForm):
+        class Meta:
+            model = Assignment
+            fields = '__all__'
+    
+    class submissionform(ModelForm):
+        class Meta:
+            model = Submission
+            fields = '__all__'
+
+    class markform(ModelForm):
+        class Meta:
+            model = Mark
+            fields = '__all__'
+    
     
     userform = userform()
     courseform = courseform()
     sectionform = sectionform()
     lectureform = lectureform()
+    attendanceform = attendanceform()
+    lecturenoteform = lecturenoteform()
+    commentform = commentform()
+    assignmentform = assignmentform()
+    submissionform = submissionform()
+    markform = markform() 
+
 
     # return HttpResponse(f"{request.user.type}, {request.user.first_name}, {type(request.user)},{request.user.id}")
     return render(request, "learn/index.html", {
@@ -44,6 +81,12 @@ def index(request):
         "courseform":courseform,
         "sectionform":sectionform,
         "lectureform": lectureform,
+        "attendanceform":attendanceform,
+        "lecturenoteform":lecturenoteform,
+        "commentform":commentform,
+        "assignmentform":assignmentform,
+        "submissionform":submissionform,
+        "markform":markform,
     })
 
 

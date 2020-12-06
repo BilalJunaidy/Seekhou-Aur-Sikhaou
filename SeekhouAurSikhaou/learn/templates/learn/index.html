@@ -65,6 +65,99 @@
       </div>
     <input class="btn btn-primary" type="submit" value="Register">
 </form>
+
+<h3>Attendance Form</h3>
+<form>
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+        {% for field in attendanceform  %}
+          <div class="col-sm-6">
+            <b>{{ field.label_tag }}</b> - {{ field }} 
+          </div>
+        {% endfor %}
+        </div>  
+      </div>
+    <input class="btn btn-primary" type="submit" value="Register">
+</form>
+
+<h3>Lecture notes Form</h3>
+<form>
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+        {% for field in lecturenoteform  %}
+          <div class="col-sm-6">
+            <b>{{ field.label_tag }}</b> - {{ field }} 
+          </div>
+        {% endfor %}
+        </div>  
+      </div>
+    <input class="btn btn-primary" type="submit" value="Register">
+</form>
+
+<h3>Comment Form</h3>
+<form>
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+        {% for field in commentform  %}
+          <div class="col-sm-6">
+            <b>{{ field.label_tag }}</b> - {{ field }} 
+          </div>
+        {% endfor %}
+        </div>  
+      </div>
+    <input class="btn btn-primary" type="submit" value="Register">
+</form>
+
+<h3>Assignment Form</h3>
+<form>
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+        {% for field in assignmentform  %}
+          <div class="col-sm-6">
+            <b>{{ field.label_tag }}</b> - {{ field }} 
+          </div>
+        {% endfor %}
+        </div>  
+      </div>
+    <input class="btn btn-primary" type="submit" value="Register">
+</form>
+
+
+<h3>Submission Form</h3>
+<form>
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+        {% for field in submissionform  %}
+          <div class="col-sm-6">
+            <b>{{ field.label_tag }}</b> - {{ field }} 
+          </div>
+        {% endfor %}
+        </div>  
+      </div>
+    <input class="btn btn-primary" type="submit" value="Register">
+</form>
+
+
+<h3>Mark Form</h3>
+<form>
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+        {% for field in markform  %}
+          <div class="col-sm-6">
+            <b>{{ field.label_tag }}</b> - {{ field }} 
+          </div>
+        {% endfor %}
+        </div>  
+      </div>
+    <input class="btn btn-primary" type="submit" value="Register">
+</form>
+
 {% endblock %}
 
         
