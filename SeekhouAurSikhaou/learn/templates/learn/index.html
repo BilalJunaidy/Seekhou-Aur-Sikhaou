@@ -50,6 +50,21 @@
     <input class="btn btn-primary" type="submit" value="Register">
 </form>
 
+<hr>
+<h3>Lecture Form</h3>
+<form>
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+        {% for field in lectureform  %}
+          <div class="col-sm-6">
+            <b>{{ field.label_tag }}</b> - {{ field }} 
+          </div>
+        {% endfor %}
+        </div>  
+      </div>
+    <input class="btn btn-primary" type="submit" value="Register">
+</form>
 {% endblock %}
 
         

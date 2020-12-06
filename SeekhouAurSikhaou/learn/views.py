@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.db import IntegrityError
 
-from .models import User, Course, Section
+from .models import User, Course, Section, lecture
 
 # Create your views here.
 
@@ -26,17 +26,24 @@ def index(request):
         class Meta:
             model = Section
             fields = '__all__'
+
+    class lectureform(ModelForm):
+        class Meta:
+            model = lecture 
+            fields = '__all__'
     
     
     userform = userform()
     courseform = courseform()
     sectionform = sectionform()
+    lectureform = lectureform()
 
     # return HttpResponse(f"{request.user.type}, {request.user.first_name}, {type(request.user)},{request.user.id}")
     return render(request, "learn/index.html", {
         "userform":userform,
         "courseform":courseform,
         "sectionform":sectionform,
+        "lectureform": lectureform,
     })
 
 

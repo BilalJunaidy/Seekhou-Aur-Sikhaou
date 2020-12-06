@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 import datetime 
+from django.utils import timezone
 
 
 # Create your models here.
@@ -39,7 +40,25 @@ class Section(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name="sections")
     teacher = models.ForeignKey('User', on_delete=models.CASCADE, related_name="sections")
 
+class lecture(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name="lectures")
+    section = models.ForeignKey('Section', on_delete=models.CASCADE, related_name="lectures")
+    number = models.IntegerField()
+    name = models.CharField(max_length = 255, default = "any")
+    description = models.CharField(max_length = 255)
+    date = models.DateField()
+    start_time = models.TimeField(auto_now=False, auto_now_add=False)
+    end_time = models.TimeField(auto_now=False, auto_now_add=False)
+    date_created = models.DateTimeField(default = timezone.now)
+    teacher = models.ForeignKey('User', on_delete=models.CASCADE, related_name="sections")
 
+# class Lecture_Note(models.Model):
+#     section = models.ForeignKey('Section', on_delete=models.CASCADE, related_name="lectures")
+#     teacher = models.ForeignKey('User', on_delete=models.CASCADE, related_name="sections")
+#     title
+#     notes
+#     date_created
+#     files
 
 
 
