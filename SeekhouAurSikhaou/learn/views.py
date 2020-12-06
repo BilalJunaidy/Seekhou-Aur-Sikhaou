@@ -6,11 +6,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.db import IntegrityError
 
-from .models import User, Course, Section, lecture
+from .models import User, Course, Section, Lecture
 
 # Create your views here.
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def index(request):
     class userform(ModelForm):
         class Meta:
@@ -29,7 +29,7 @@ def index(request):
 
     class lectureform(ModelForm):
         class Meta:
-            model = lecture 
+            model = Lecture 
             fields = '__all__'
     
     
