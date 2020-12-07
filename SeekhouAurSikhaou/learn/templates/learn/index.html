@@ -3,22 +3,32 @@
 
 {% block body %}
 
-<!-- <h3>User Form</h3>
-<form>
+<style>
+    
+</style>
+    
+
+<h3>User Form</h3>
+<form action = "{% url 'index' %}" method = "POST">
     {% csrf_token %}
     <div class="container">
         <div class="row">
         {% for field in userform  %}
           <div class="col-sm-6">
-            <b>{{ field.label_tag }}</b> - {{ field }} 
+            <b>{{ field.label_tag }}</b>  {{ field }}  {{field.errors}}
           </div>
         {% endfor %}
         </div>  
       </div>
+      {% if message %}
+      <div>{{ message }}</div>
+      {% endif %}
+      
     <input class="btn btn-primary" type="submit" value="Register">
-</form> -->
+</form>
+    
 
-<!-- <hr>
+<hr>
 <h3>Course Form</h3>
 <form>
     {% csrf_token %}
@@ -156,7 +166,7 @@
         </div>  
       </div>
     <input class="btn btn-primary" type="submit" value="Register">
-</form> -->
+</form>
 
 {% endblock %}
 
