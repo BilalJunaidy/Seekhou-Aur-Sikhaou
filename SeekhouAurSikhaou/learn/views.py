@@ -7,7 +7,8 @@ from django.db import IntegrityError
 
 
 from .forms import userform, courseform, sectionform, lectureform, attendanceform, lecturenoteform, commentform, assignmentform, submissionform, markform
-# from .helpers import validateusers, validatedates
+from .helpers import validateusers
+# , validatedates
 
 # Create your views here.
 
@@ -77,6 +78,50 @@ def course(request):
     return render(request, "learn/course.html", {
         "courseform": courseform()
     })
+
+
+def section(request):
+    if request.method == 'POST':
+        section_form = sectionform(request.POST)
+
+        # The following will take place when the form IS valid
+        if section_form.is_valid():
+            section_form.save()
+            # return validatedates(request, course_form)
+            return HttpResponse("you have made a successful post request")  
+
+        # The following will take place when the form is NOT valid
+        else:
+            return render(request, "learn/section.html", {
+                "sectionform": section_form,
+            })
+
+    return render(request, "learn/section.html", {
+        "sectionform": sectionform()
+    })
+
+
+def lecture(request):
+    if request.method == 'POST':
+        lecture_form = lectureform(request.POST)
+
+        # The following will take place when the form IS valid
+        if lecture_form.is_valid():
+            lecture_form.save()
+            # return validatedates(request, course_form)
+            return HttpResponse("you have made a successful post request")  
+
+        # The following will take place when the form is NOT valid
+        else:
+            return render(request, "learn/lecture.html", {
+                "lectureform": lecture_form,
+            })
+
+    return render(request, "learn/lecture.html", {
+        "lectureform": lectureform()
+    })
+
+
 
 def login_view(request):
     if request.method == "POST":

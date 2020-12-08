@@ -103,6 +103,9 @@ class Course(models.Model):
     #         if start_date_entered > end_date_entered:
     #             raise ValidationError(_('The end date of the course can not be before the start date'))
 
+    def __str__(self):
+        return f"{self.name} - {self.code}"
+        
 
     
 class Section(models.Model):
@@ -113,28 +116,37 @@ class Section(models.Model):
     ]
     name = models.CharField(max_length = 150)
     description = models.TextField()
-    start_date = models.DateField(auto_now = datetime.datetime.now())
+    start_date = models.DateField()
     end_date = models.DateField()
     # Duration = 
-    status = models.BooleanField(default = True)
-    academic_year = models.PositiveSmallIntegerField()
+    status = models.BooleanField(_('Section active or not'), default = True)
+    academic_year = models.PositiveSmallIntegerField(default = datetime.date.today().year, validators = [MinValueValidator(datetime.date.today().year - 5), MaxValueValidator(datetime.date.today().year + 5)])
     academic_term = models.CharField(max_length=6, choices=TERM_OPTIONS, default='FALL', blank=False)
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name="sections")
     teacher = models.ForeignKey('User', on_delete=models.CASCADE, related_name="sections")
     date_created = models.DateTimeField(default = timezone.now)
 
+    def __str__(self):
+        return f"{self.name} - {self.teacher} - {self.academic_term} - {self.academic_year}"
+
 
 class Lecture(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name="lectures")
     section = models.ForeignKey('Section', on_delete=models.CASCADE, related_name="lectures")
-    number = models.IntegerField()
+    # I don't think we would need the user to be inputting a number field for lectures especially considering (atleast for now)
+    # I am not giving users the ability to delete lectures. Therefore, the id field of the Lecture object should be fine since it will autoincrement
+    # number = models.IntegerField()
     name = models.CharField(max_length = 255)
     description = models.TextField()
-    lecture_date = models.DateField()
-    start_time = models.TimeField(auto_now=False, auto_now_add=False)
-    end_time = models.TimeField(auto_now=False, auto_now_add=False)
+    lecture_date = models.DateField()                       
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     date_created = models.DateTimeField(default = timezone.now)
     teacher = models.ForeignKey('User', on_delete=models.CASCADE, related_name="lectures")
+
+    def __str__(self):
+        return f"{self.id} - {self.name} - {self.lecture_data}"
+
 
 class Attendance(models.Model):
     ATTENDANCE_OPTIONS = [
