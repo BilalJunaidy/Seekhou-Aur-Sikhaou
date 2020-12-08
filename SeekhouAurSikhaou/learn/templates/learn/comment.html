@@ -1,0 +1,29 @@
+{% extends "learn/layout.html" %}
+
+
+{% block body %}
+    
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+    
+<hr>
+<h3>Comment Form</h3>
+<form action = "{% url 'comment' %}" method = "POST">
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+        {% for field in commentform  %}
+          <div class="col-sm-6">
+            <b>{{ field.label_tag }}</b> {{ field }} {{field.errors}}
+          </div>
+        {% endfor %}
+        </div>  
+      </div>
+    <input class="btn btn-primary" type="submit" value="Register">
+</form>
+
+{% endblock %}
+
+        

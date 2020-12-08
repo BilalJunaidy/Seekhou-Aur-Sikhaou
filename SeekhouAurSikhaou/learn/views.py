@@ -122,6 +122,140 @@ def lecture(request):
     })
 
 
+def attendance(request):
+    if request.method == 'POST':
+        attendance_form = attendanceform(request.POST)
+
+        # The following will take place when the form IS valid
+        if attendance_form.is_valid():
+            attendance_form.save()
+            # return validatedates(request, course_form)
+            return HttpResponse("you have made a successful post request")  
+
+        # The following will take place when the form is NOT valid
+        else:
+            return render(request, "learn/attendance.html", {
+                "attendanceform": attendance_form,
+            })
+
+    return render(request, "learn/attendance.html", {
+        "attendanceform": attendanceform()
+    })
+
+
+def lecturenote(request):
+    if request.method == 'POST':
+        lecturenote_form = lecturenoteform(request.POST)
+
+        # The following will take place when the form IS valid
+        if lecturenote_form.is_valid():
+            lecturenote_form.save()
+            # return validatedates(request, course_form)
+            return HttpResponse("you have made a successful post request")  
+
+        # The following will take place when the form is NOT valid
+        else:
+            return render(request, "learn/lecturenote.html", {
+                "lecturenoteform": lecturenote_form,
+            })
+
+    return render(request, "learn/lecturenote.html", {
+        "lecturenoteform": lecturenoteform()
+    })
+
+
+
+def comment(request):
+    comment_form = commentform(request.POST or None)
+    if request.method == 'POST':
+        comment_form = commentform(request.POST)
+
+        # The following will take place when the form IS valid
+        if comment_form.is_valid():
+            comment_form.save()
+            # return validatedates(request, course_form)
+            return HttpResponse("you have made a successful post request")  
+
+        # The following will take place when the form is NOT valid
+        else:
+            return render(request, "learn/comment.html", {
+                "commentform": comment_form,
+            })
+
+    return render(request, "learn/comment.html", {
+                "commentform": comment_form,
+            })
+
+
+def assignment(request):
+    assignment_form = assignmentform(request.POST or None)
+
+    if request.method == 'POST':
+        assignment_form = assignmentform(request.POST)
+
+        # The following will take place when the form IS valid
+        if assignment_form.is_valid():
+            assignment_form.save()
+            # return validatedates(request, course_form)
+            return HttpResponse("you have made a successful post request")  
+
+        # The following will take place when the form is NOT valid
+        else:
+            return render(request, "learn/assignment.html", {
+                "assignmentform": assignment_form,
+            })
+
+    return render(request, "learn/assignment.html", {
+                "assignmentform": assignment_form,
+            })
+
+
+def submission(request):
+    submission_form = submissionform(request.POST or None)
+
+    if request.method == 'POST':
+        submission_form = submissionform(request.POST)
+
+        # The following will take place when the form IS valid
+        if submission_form.is_valid():
+            submission_form.save()
+            # return validatedates(request, course_form)
+            return HttpResponse("you have made a successful post request")  
+
+        # The following will take place when the form is NOT valid
+        else:
+            return render(request, "learn/submission.html", {
+                "submissionform": submission_form,
+            })
+
+    return render(request, "learn/submission.html", {
+                "submissionform": submission_form,
+            })
+
+
+def mark(request):
+    mark_form = markform(request.POST or None)
+
+    if request.method == 'POST':
+        mark_form = markform(request.POST)
+
+        # The following will take place when the form IS valid
+        if mark_form.is_valid():
+            mark_form.save()
+            # return validatedates(request, course_form)
+            return HttpResponse("you have made a successful post request")  
+
+        # The following will take place when the form is NOT valid
+        else:
+            return render(request, "learn/mark.html", {
+                "markform": mark_form,
+            })
+
+    return render(request, "learn/mark.html", {
+                "markform": mark_form,
+            })
+
+
 
 def login_view(request):
     if request.method == "POST":

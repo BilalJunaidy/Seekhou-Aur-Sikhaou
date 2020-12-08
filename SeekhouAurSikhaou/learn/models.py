@@ -38,6 +38,9 @@ class User(AbstractUser):
     gender = models.CharField(max_length=6, choices=GENDER_OPTIONS, blank=False, default='MALE')
     age = models.IntegerField(validators=[MinValueValidator(7), MaxValueValidator(100)])
 
+    def __str__(self):
+        return f"{self.type} - {self.username}"
+
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -145,7 +148,7 @@ class Lecture(models.Model):
     teacher = models.ForeignKey('User', on_delete=models.CASCADE, related_name="lectures")
 
     def __str__(self):
-        return f"{self.id} - {self.name} - {self.lecture_data}"
+        return f"{self.id} - {self.teacher.username} - {self.name} - {self.lecture_date}"
 
 
 class Attendance(models.Model):
@@ -161,36 +164,52 @@ class Attendance(models.Model):
     # this information, management/teachers will be able to adjust course and section offerings accordingly. 
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name="attendances")
     section = models.ForeignKey('Section', on_delete=models.CASCADE, related_name="attendances")
-    status = models.CharField(max_length=7, choices = ATTENDANCE_OPTIONS, default = 'PRESENT')
+    attendance_status = models.CharField(max_length=7, choices = ATTENDANCE_OPTIONS, default = 'PRESENT')
     student = models.ManyToManyField('User', blank=False, related_name = "attendances")
-    teacher_comments = models.TextField()
+    teacher_comments = models.TextField(null=True, blank=True)
+    date_created = models.DateTimeField(default = timezone.now)
+
+    def __str__(self):
+        return f"{self.student.username} marked {self.attendance_status} for {self.lecture}"
 
 class Lecture_Note(models.Model):
+    lecture = models.ForeignKey('Lecture', on_delete=models.CASCADE, related_name="lecturenotes")
     section = models.ForeignKey('Section', on_delete=models.CASCADE, related_name="lecturenotes")
     teacher = models.ForeignKey('User', on_delete=models.CASCADE, related_name="lecturenotes")
     title = models.CharField(max_length = 255)
     notes = models.TextField()
     date_created = models.DateTimeField(default = timezone.now)
-    files = models.FileField()
+    # files = models.FileField()
+
+    def __str__(self):
+        return f"{self.id} - {self.title} - {self.date_created}"
 
 class Comment(models.Model):
+    lecture = models.ForeignKey('Lecture', on_delete=models.CASCADE, related_name="comments")
     lecture_note = models.ForeignKey('Lecture_Note', on_delete=models.CASCADE, related_name="comments")
     student = models.ForeignKey('User', on_delete=models.CASCADE, related_name="comments")
     title = models.CharField(max_length = 255)
     comment = models.TextField()
     date_created = models.DateTimeField(default = timezone.now)
 
+    def __str__(self):
+        return f"{self.student.username} commented on lecture {self.lecture.id} on {self.date_created}"
+
 class Assignment(models.Model):
     title = models.CharField(max_length = 255)
     description = models.TextField()
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name="assignments")
     section = models.ForeignKey('Section', on_delete=models.CASCADE, related_name="assignments")
-    start_date = models.DateField()
-    end_date = models.DateField()
-    status = models.BooleanField(default=True)
+    deadline = models.DateTimeField()
+    # end_date = models.DateField()
+    # end_time = models.TimeField()
+    status = models.BooleanField(_('Assignment available or not'),default=True)
     date_created = models.DateTimeField(default = timezone.now)
-    files = models.FileField()
+    # files = models.FileField()
     teacher = models.ForeignKey('User', on_delete=models.CASCADE, related_name="assignments")
+
+    def __str__(self):
+        return f"Assignment # {self.id} {self.title} due on {self.deadline}"
 
 class Submission(models.Model):
     assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE, related_name="submissions")
@@ -198,7 +217,7 @@ class Submission(models.Model):
     title = models.CharField(max_length = 255)
     description = models.TextField()
     date_created = models.DateTimeField(default = timezone.now)
-    files = models.FileField()
+    # files = models.FileField()
 
 class Mark(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name="marks")
@@ -207,8 +226,8 @@ class Mark(models.Model):
     student = models.ForeignKey('User', on_delete=models.CASCADE, related_name="marks")
     # teacher = models.ForeignKey('User', on_delete=models.CASCADE, related_name="marks")
     date_created = models.DateTimeField(default = timezone.now)
-    marks = models.FloatField() 
-    teacher_comments = models.TextField()
+    marks = models.FloatField(validators = [MinValueValidator(0), MaxValueValidator(100)]) 
+    teacher_comments = models.TextField(null=True, blank=True) 
 
 
 

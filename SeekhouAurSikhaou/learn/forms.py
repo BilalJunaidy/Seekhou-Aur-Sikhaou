@@ -3,6 +3,7 @@ from django import forms
 from .models import User, Course, Section, Lecture, Attendance, Lecture_Note, Comment, Assignment, Submission, Mark
 from django.core.exceptions import ValidationError
 import datetime 
+import pytz
 
 
 class DatePicker(forms.DateInput):
@@ -12,6 +13,8 @@ class DatePicker(forms.DateInput):
 class TimePicker(forms.TimeInput):
     input_type = 'time'
 
+class DateTimePicker(forms.DateTimeInput):
+    input_type = 'datetime-local'
 
 class userform(ModelForm):
     class Meta:
@@ -116,32 +119,157 @@ class lectureform(ModelForm):
         if lecture_date < datetime.date.today():
             self.add_error('lecture_date', f'Todays date is {datetime.date.today()}, and you are trying to create a lecture for {lecture_date}. You can not create a lecture the lecture date of which has already passed')
 
+
 class attendanceform(ModelForm):
     class Meta:
         model = Attendance
-        fields = '__all__'
+        exclude = ['date_created']
+
+    def __init__(self, *args, **kwargs):
+        super(attendanceform, self).__init__(*args, **kwargs)
+    
+    def clean(self):
+        """
+        In here you can validate the two fields
+        raise ValidationError if you see anything goes wrong. 
+        for example if you want to make sure that field1 != field2
+        """
+        super(attendanceform, self).clean()
+        student = self.cleaned_data['student']
+        
+        for item in student:
+            if item.type != 'STUDENT':
+                self.add_error('student', f'You need to select a student for this attendance. Currently you selected {item.username}, who is a {item.type.lower()}')
+
+
 
 class lecturenoteform(ModelForm):
     class Meta:
         model = Lecture_Note
-        fields = '__all__'
+        exclude = ['date_created']
+
+    def __init__(self, *args, **kwargs):
+        super(lecturenoteform, self).__init__(*args, **kwargs)
+    
+    def clean(self):
+        """
+        In here you can validate the two fields
+        raise ValidationError if you see anything goes wrong. 
+        for example if you want to make sure that field1 != field2
+        """
+        super(lecturenoteform, self).clean()
+        teacher = self.cleaned_data['teacher']
+        if teacher.type != 'TEACHER':
+            self.add_error('teacher', f'You need to select a teacher for this lecture. Currently you selected {teacher.username}, who is a {teacher.type.lower()}')
+
+    
 
 class commentform(ModelForm):
     class Meta:
         model = Comment
-        fields = '__all__'
+        exclude = ['date_created']
+
+    def __init__(self, *args, **kwargs):
+        super(commentform, self).__init__(*args, **kwargs)
+    
+    def clean(self):
+        """
+        In here you can validate the two fields
+        raise ValidationError if you see anything goes wrong. 
+        for example if you want to make sure that field1 != field2
+        """
+        super(commentform, self).clean()
+        student = self.cleaned_data['student']
+        if student.type != 'STUDENT':
+            self.add_error('student', f'You need to select a student for this attendance. Currently you selected {student.username}, who is a {student.type.lower()}')
+
+
 
 class assignmentform(ModelForm):
     class Meta:
         model = Assignment
-        fields = '__all__'
+        exclude = ['date_created']
+        widgets = {"deadline": DateTimePicker()}
+    
+    def __init__(self, *args, **kwargs):
+        super(assignmentform, self).__init__(*args, **kwargs)
+    
+    def clean(self):
+        """
+        In here you can validate the two fields
+        raise ValidationError if you see anything goes wrong. 
+        for example if you want to make sure that field1 != field2
+        """
+        super(assignmentform, self).clean()
+
+        utc = pytz.UTC
+        now = datetime.datetime.now()
+        now = utc.localize(now)
+
+        deadline = self.cleaned_data['deadline']
+        difference = now - deadline
+    
+        if difference.days > 0:
+            self.add_error('deadline',f'You set the deadline to {deadline}, however, this deadline has already passed since the current time is {datetime.datetime.now()}')
+
+        teacher = self.cleaned_data['teacher']
+        if teacher.type != 'TEACHER':
+            self.add_error('teacher', f'You need to select a teacher for this lecture. Currently you selected {teacher.username}, who is a {teacher.type.lower()}')
+
 
 class submissionform(ModelForm):
     class Meta:
         model = Submission
-        fields = '__all__'
+        exclude = ['date_created']
+
+    def __init__(self, *args, **kwargs):
+        super(submissionform, self).__init__(*args, **kwargs)
+    
+    def clean(self):
+        """
+        In here you can validate the two fields
+        raise ValidationError if you see anything goes wrong. 
+        for example if you want to make sure that field1 != field2
+        """
+        super(submissionform, self).clean()
+        student = self.cleaned_data['student']
+        if student.type != 'STUDENT':
+            self.add_error('student', f'You need to select a student for this attendance. Currently you selected {student.username}, who is a {student.type.lower()}')
+
+        utc = pytz.UTC
+
+        utc = pytz.UTC
+        now = datetime.datetime.now()
+        now = utc.localize(now)
+        # print(f"Now ka type: {type(now)}")        
+        assignment_deadline = self.cleaned_data['assignment'].deadline
+        # print(f"Assignment deadline ka type: {type(assignment_deadline)}")
+        # print(type(self.date_created))
+        # assignment_deadline = utc.localize(assignment_deadline)
+        # print(type(assignment_deadline))
+
+        if assignment_deadline < now:
+            self.add_error('assignment', 'The deadline for this assignment has already passed. sorry')
+
+
 
 class markform(ModelForm):
     class Meta:
         model = Mark
-        fields = '__all__'
+        exclude = ['date_created']
+    
+    def __init__(self, *args, **kwargs):
+        super(markform, self).__init__(*args, **kwargs)
+    
+    def clean(self):
+        """
+        In here you can validate the two fields
+        raise ValidationError if you see anything goes wrong. 
+        for example if you want to make sure that field1 != field2
+        """
+        super(markform, self).clean()
+        student = self.cleaned_data['student']
+        if student.type != 'STUDENT':
+            self.add_error('student', f'You need to select a student for this attendance. Currently you selected {student.username}, who is a {student.type.lower()}')
+
+     
