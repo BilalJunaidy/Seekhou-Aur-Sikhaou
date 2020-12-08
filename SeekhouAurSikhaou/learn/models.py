@@ -2,6 +2,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 import datetime 
 from django.utils import timezone
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils.translation import gettext_lazy as _
+import datetime 
 
 # Create your models here.
 
@@ -33,21 +36,74 @@ class User(AbstractUser):
     type = models.CharField(max_length=7, choices=TYPE_OPTIONS, default='STUDENT', blank=False)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name="users")
     gender = models.CharField(max_length=6, choices=GENDER_OPTIONS, blank=False, default='MALE')
+    age = models.IntegerField(validators=[MinValueValidator(7), MaxValueValidator(100)])
+
+
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+
+
+# The following were my unsuccesful attemtps at validating the start and end date fields. 
+
+# user_entered_course_start_date = datetime.date.today()
+# first_attempt = True
+
+# def validatedates(value, first_attempt, user_entered_course_start_date):
+#     if first_attempt == False:
+#         if value < user_entered_course_start_date:
+#             raise ValidationError(
+#             _('The end date of the course can not be before the start date'),
+#             params={'value': value},
+#         )            
+#     else:
+#         user_entered_course_start_date = value
+#         first_attempt = False
+#         return value 
+
+    # print(user_entered_course_start_date)
+    # user_entered_course_start_date = value
+    # print(user_entered_course_start_date)
+    # if user_entered_course_start_date < value: 
+    # # if value != 'bhainscourse':
+    # #     print(type(value))
+    # #     print(value)
+    #     raise ValidationError(
+    #         _('%(value)s is not a legit course name'),
+    #         params={'value': value},
+    #     )
+
 
 class Course(models.Model):
     name = models.CharField(max_length = 150)
     code = models.CharField(max_length = 100)
     description = models.TextField()
+    # start_date = models.DateField(validators=[validatedates])
     start_date = models.DateField()
 
     # For now I have changed the default value of the datefield to be equal to datetime.datetime.now since I would like the user to define this field 
     # To come back to this in the continous improvement phase (post-Hackathon)
     # start_date = models.DateField(auto_now = datetime.datetime.now())
     
+    # end_date = models.DateField(validators=[validatedates])
     end_date = models.DateField()
-    # Duration 
-    Status = models.BooleanField(default = True)
+
+    Status = models.BooleanField(_('Course active or not'), default = True)
     date_created = models.DateTimeField(default = timezone.now)
+
+# The following were my unsuccesful attemtps at validating the start and end date fields. 
+# This whole clean shit needed to be in the modelform class not the model class itself. 
+
+    # def clean(self):
+    #     cleaned_data = super(request.POST)
+    #     # cleaned_data = super().clean()
+    #     start_date_entered = cleaned_data.get("start_date")
+    #     end_date_entered = cleaned_data.get("end_date")
+
+    #     if start_date_entered and end_date_entered:
+    #         if start_date_entered > end_date_entered:
+    #             raise ValidationError(_('The end date of the course can not be before the start date'))
+
+
     
 class Section(models.Model):
     TERM_OPTIONS = [

@@ -1,14 +1,17 @@
 {% extends "learn/layout.html" %}
-{% load static %}
+<!-- {% load static %} -->
 
 {% block body %}
-
-<style>
-    
-</style>
     
 
 <h3>User Form</h3>
+
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+
+
 <form action = "{% url 'index' %}" method = "POST">
     {% csrf_token %}
     <div class="container">
@@ -20,9 +23,7 @@
         {% endfor %}
         </div>  
       </div>
-      {% if message %}
-      <div>{{ message }}</div>
-      {% endif %}
+
       
     <input class="btn btn-primary" type="submit" value="Register">
 </form>

@@ -5,7 +5,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.db import IntegrityError
 
+
 from .forms import userform, courseform, sectionform, lectureform, attendanceform, lecturenoteform, commentform, assignmentform, submissionform, markform
+# from .helpers import validateusers, validatedates
 
 # Create your views here.
 
@@ -29,31 +31,13 @@ def index(request):
         # This needs to change in the next iteration of this web app.
         # Look into declaring a validator function and using that as the validator argument into the "parent" field in the User model class
         # This validator then needs to be connected to the ModelForm.
+
+        # The following will take place when the form IS valid
         if user_form.is_valid():
             user_form.save(commit = False)
+            return validateusers(request, user_form)
 
-            if user_form.cleaned_data["parent"] is None and user_form.cleaned_data["type"] == 'STUDENT':
-                return render(request, "learn/index.html", {
-                    "userform": user_form,
-                    "message":"Since you are trying to create a Student User, you must select a Parent as well during the Student registration process"
-                })
-
-            elif not user_form.cleaned_data["parent"] is None and not user_form.cleaned_data["type"] == 'STUDENT':
-                return render(request, "learn/index.html", {
-                    "userform": user_form,
-                    "message":"You can not select a Parent if you are not registering a Student. Please unselect the Parent and submit the form again."
-                })
-
-            elif user_form.cleaned_data["type"] == 'STUDENT' and user_form.cleaned_data["parent"].type in ['ADMIN', 'TEACHER', 'STUDENT']:
-                    return render(request, "learn/index.html", {
-                    "userform": user_form,
-                    "message":"Since you are trying to create a Student User, you must select a Parent as well during the Student registration process"
-                })           
-
-            else:
-                user_form.save()
-            return HttpResponse('Your form has now been saved')
-        
+        # The following will take place when the form is NOT valid
         else:
             return render(request, "learn/index.html", {
                 "userform": user_form
@@ -73,6 +57,26 @@ def index(request):
         "markform":mark_form,
     })
 
+
+def course(request):
+    if request.method == 'POST':
+        course_form = courseform(request.POST)
+
+        # The following will take place when the form IS valid
+        if course_form.is_valid():
+            course_form.save()
+            # return validatedates(request, course_form)
+            return HttpResponse("you have made a successful post request")  
+
+        # The following will take place when the form is NOT valid
+        else:
+            return render(request, "learn/course.html", {
+                "courseform": course_form,
+            })
+
+    return render(request, "learn/course.html", {
+        "courseform": courseform()
+    })
 
 def login_view(request):
     if request.method == "POST":
