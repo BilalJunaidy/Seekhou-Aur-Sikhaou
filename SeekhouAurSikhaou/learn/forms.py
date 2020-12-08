@@ -41,6 +41,10 @@ class courseform(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(courseform, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+        })
     
     def clean(self):
         """
@@ -67,6 +71,10 @@ class sectionform(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(sectionform, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+        })
     
     def clean(self):
         """
@@ -96,6 +104,10 @@ class lectureform(ModelForm):
                     }
     def __init__(self, *args, **kwargs):
         super(lectureform, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+        })
     
     def clean(self):
         """
@@ -127,6 +139,10 @@ class attendanceform(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(attendanceform, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+        })
     
     def clean(self):
         """
@@ -150,6 +166,10 @@ class lecturenoteform(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(lecturenoteform, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+        })
     
     def clean(self):
         """
@@ -171,6 +191,10 @@ class commentform(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(commentform, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+        })
     
     def clean(self):
         """
@@ -193,6 +217,10 @@ class assignmentform(ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(assignmentform, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+        })
     
     def clean(self):
         """
@@ -224,6 +252,10 @@ class submissionform(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(submissionform, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+        })
     
     def clean(self):
         """
@@ -260,6 +292,10 @@ class markform(ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(markform, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+        })
     
     def clean(self):
         """
