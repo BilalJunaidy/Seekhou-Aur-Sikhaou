@@ -10,7 +10,7 @@
     
 <hr>
 <h3>Assignment Form</h3>
-<form action = "{% url 'assignment' %}" method = "POST">
+<form action = "{% url 'create_assignment' %}" method = "POST">
     {% csrf_token %}
     <div class="container">
         <div class="row">

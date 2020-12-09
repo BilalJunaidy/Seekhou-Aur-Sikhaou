@@ -1,0 +1,30 @@
+{% extends "learn/layout.html" %}
+
+
+{% block body %}
+    
+
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+
+
+
+<h4>The following are all of the Assignments made to your inbox</h4>
+<hr>
+{% for item in assignments %}
+
+        <h5>Assignment ID: {{item.id}}</h5>
+        <h5>Assignment title: {{item.title}}</h5>
+        <h5>Assignment Description: {{item.description}}</h5>
+        <h5>Assignment Teacher: {{item.teacher}}</h5>
+        <h5>Assignment Deadline: {{item.deadline}}</h5>
+
+    <hr>
+    <br>
+{% endfor %}
+
+{% endblock %}
+
+        

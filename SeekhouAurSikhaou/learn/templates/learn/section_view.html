@@ -1,0 +1,42 @@
+{% extends "learn/layout.html" %}
+
+
+{% block body %}
+    
+
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+
+
+
+<h4>The following are all of the lectures available for {{section}}</h4>
+<hr>
+{% for item in lectures %}
+    
+        <h5>Lecture ID: {{item.id}}</h5>
+        <h5>Lecture Name: {{item.name}}</h5>
+        <h5>Lecture Notes: {{item.description}}</h5>
+        <h5>Lecture Date: {{item.lecture_date}}</h5>
+
+    <hr>
+    <br>
+{% endfor %}
+
+
+<h4>The following are all of the Assignments available for {{section}}</h4>
+<hr>
+{% for item in assignments %}
+    
+        <h5>Assignment ID: {{item.id}}</h5>
+        <h5>Assignment title: {{item.title}}</h5>
+        <h5>Assignment Description: {{item.description}}</h5>
+        <h5>Assignment Teacher: {{item.teacher}}</h5>
+        <h5>Assignment Deadline: {{item.deadline}}</h5>
+
+    <hr>
+    <br>
+{% endfor %}
+
+{% endblock %}

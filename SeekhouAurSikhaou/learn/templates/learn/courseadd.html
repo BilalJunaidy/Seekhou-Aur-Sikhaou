@@ -11,7 +11,7 @@
     
 <hr>
 <h3>Course Form</h3>
-<form action = "{% url 'course' %}" method = "POST">
+<form action = "{% url 'admin_create_course' %}" method = "POST">
     {% csrf_token %}
     <div class="container">
         <div class="row">

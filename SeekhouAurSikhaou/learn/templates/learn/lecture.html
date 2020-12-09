@@ -11,7 +11,7 @@
     
 <hr>
 <h3>Lecture Form</h3>
-<form action = "{% url 'lecture' %}" method = "POST">
+<form action = "{% url 'create_lecture' %}" method = "POST">
     {% csrf_token %}
     <div class="container">
         <div class="row">

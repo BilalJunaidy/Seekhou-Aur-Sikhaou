@@ -41,6 +41,7 @@ class User(AbstractUser):
     gender = models.CharField(max_length=6, choices=GENDER_OPTIONS, null=True, blank=True, default='MALE')
     age = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(7), MaxValueValidator(100)])
     is_teacher = models.BooleanField(_('Check box if the user is a teacher'), default = False)
+    is_student = models.BooleanField(_('Check box if the user is a student'), default = False)
 
     def __str__(self):
         return f"{self.type} - {self.first_name} {self.last_name}"
@@ -131,6 +132,7 @@ class Section(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name="sections")
     teacher = models.ForeignKey('User', on_delete=models.CASCADE, related_name="sections")
     date_created = models.DateTimeField(default = timezone.now)
+    student = models.ManyToManyField('User', blank=False, related_name = "section_students")
 
     def __str__(self):
         return f"{self.name} - {self.teacher} - {self.academic_term} - {self.academic_year}"
@@ -217,9 +219,14 @@ class Assignment(models.Model):
 class Submission(models.Model):
     assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE, related_name="submissions")
     student = models.ForeignKey('User', on_delete=models.CASCADE, related_name="submissions")
+    teacher = models.ForeignKey('User', on_delete=models.CASCADE, null=True, related_name="submissions_teacher")
     title = models.CharField(max_length = 255)
     description = models.TextField()
     date_created = models.DateTimeField(default = timezone.now)
+
+    def __str__(self):
+        return f"{self.student} submission to {self.teacher} for {self.assignment}"
+    
     # files = models.FileField()
 
 class Mark(models.Model):

@@ -1,0 +1,29 @@
+{% extends "learn/layout.html" %}
+
+
+{% block body %}
+    
+
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+
+
+
+<h4>The following are all of the Marks you have received so far on your submitted assignment</h4>
+<hr>
+{% for item in marks %}
+
+        <h5>Assignment: {{item.assignment}}</h5>
+        <h5>Section: {{item.section}}</h5>
+        <h5>Marks: {{item.marks}}</h5>
+        <h5>Teacher comments: {{item.teacher_comments}}</h5>
+
+    <hr>
+    <br>
+{% endfor %}
+
+{% endblock %}
+
+        

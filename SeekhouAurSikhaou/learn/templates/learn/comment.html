@@ -10,7 +10,7 @@
     
 <hr>
 <h3>Comment Form</h3>
-<form action = "{% url 'comment' %}" method = "POST">
+<form action = "{% url 'create_comment' %}" method = "POST">
     {% csrf_token %}
     <div class="container">
         <div class="row">

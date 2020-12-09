@@ -20,7 +20,7 @@ class userform(ModelForm):
     class Meta:
         model = User
         # fields = ['username','password','first_name','last_name','email','type','parent', 'grade_level', 'profile_image']
-        fields = ['username','password','first_name','last_name','email','type','parent', 'grade_level', 'gender', 'age', 'is_teacher']
+        fields = ['username','password','first_name','last_name','email','type','parent', 'grade_level', 'gender', 'age', 'is_teacher', 'is_student']
     
     def __init__(self, *args, **kwargs):
         super(userform, self).__init__(*args, **kwargs)
@@ -272,8 +272,12 @@ class submissionform(ModelForm):
         """
         super(submissionform, self).clean()
         student = self.cleaned_data['student']
+        teacher = self.cleaned_data['teacher']
         if student.type != 'STUDENT':
             self.add_error('student', f'You need to select a student for this attendance. Currently you selected {student.username}, who is a {student.type.lower()}')
+        if teacher.type != 'TEACHER':
+            self.add_error('teacher', f'You need to select a teacher for this lecture. Currently you selected {teacher.username}, who is a {teacher.type.lower()}')
+
 
         utc = pytz.UTC
 

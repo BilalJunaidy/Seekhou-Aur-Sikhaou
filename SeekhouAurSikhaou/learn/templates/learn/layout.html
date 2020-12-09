@@ -46,10 +46,23 @@
     {% endif %}
 
     {% if user.is_authenticated and user.is_teacher %}
-    <a class="btn btn-sm btn-outline-primary" href="{% url 'index' %}">Create Lecture</a>
-    <a class="btn btn-sm btn-outline-primary" href="{% url 'index' %}">Create Assignment</a>
-    <a class="btn btn-sm btn-outline-primary" href="{% url 'index' %}">View submissions</a>
-    <a class="btn btn-sm btn-outline-primary" href="{% url 'index' %}">Grade Assignments</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'create_lecture' %}">Create Lecture</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'create_lecturenote' %}">Create Lecture Note</a>
+    <!-- <a class="btn btn-sm btn-outline-primary" href="{% url 'create_comment' %}">Create Comments</a> -->
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'create_assignment' %}">Create Assignment</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'view_submission' %}">View submissions</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'create_mark' %}">Submit Marks</a>
+
+    {% else %}
+    {% endif %}
+
+    
+    {% if user.is_authenticated and user.is_student %}
+    
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'create_submission' %}">Create Submission</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'create_comment' %}">Create Comments</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'view_assignment' %}">View Assignments</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'view_mark' %}">View Marks</a>
 
     {% else %}
     {% endif %}

@@ -19,7 +19,7 @@ from .helpers import validateusers
 @login_required(login_url='login')
 def index(request):
     if request.user.is_staff:
-        return HttpResponseRedirect('admin')
+        return HttpResponseRedirect(reverse('admin'))
     else:
         return render(request, "learn/index.html")
         
@@ -37,6 +37,7 @@ def admin(request):
 def user(request):
 
     user_form = userform(request.POST or None)
+
     if request.method == 'POST':
         
         # This two step validation process for the submitted form is very hacky in my opinion and I don't like it.
@@ -94,7 +95,7 @@ def course_add(request):
         if course_form.is_valid():
             course_form.save()
             # return validatedates(request, course_form)
-            return HttpResponse("you have made a successful post request")  
+            return HttpResponseRedirect(reverse('index'))  
 
         # The following will take place when the form is NOT valid
         else:
@@ -109,9 +110,15 @@ def course_add(request):
 
 @login_required(login_url='login')
 def section(request, section_id):
+    current_section = Section.objects.get(pk = section_id)
     assignments = Assignment.objects.filter(section_id = section_id)
     lectures = Lecture.objects.filter(section_id = section_id)
-    return HttpResponse(f'oh bhains - {section_id}')
+    return render(request, "learn/section_view.html", {
+        "assignments": assignments,
+        "lectures": lectures,
+        "section": current_section
+
+    })
 
 
 
@@ -124,7 +131,7 @@ def section_add(request):
         if section_form.is_valid():
             section_form.save()
             # return validatedates(request, course_form)
-            return HttpResponse("you have made a successful post request")  
+            return HttpResponseRedirect(reverse('index')) 
 
         # The following will take place when the form is NOT valid
         else:
@@ -137,7 +144,7 @@ def section_add(request):
     })
 
 @login_required(login_url='login')
-def lecture(request):
+def lecture_add(request):
     if request.method == 'POST':
         lecture_form = lectureform(request.POST)
 
@@ -145,7 +152,7 @@ def lecture(request):
         if lecture_form.is_valid():
             lecture_form.save()
             # return validatedates(request, course_form)
-            return HttpResponse("you have made a successful post request")  
+            return HttpResponseRedirect(reverse('index')) 
 
         # The following will take place when the form is NOT valid
         else:
@@ -166,7 +173,7 @@ def attendance(request):
         if attendance_form.is_valid():
             attendance_form.save()
             # return validatedates(request, course_form)
-            return HttpResponse("you have made a successful post request")  
+            return HttpResponseRedirect(reverse('index'))  
 
         # The following will take place when the form is NOT valid
         else:
@@ -179,7 +186,7 @@ def attendance(request):
     })
 
 @login_required(login_url='login')
-def lecturenote(request):
+def lecturenote_add(request):
     if request.method == 'POST':
         lecturenote_form = lecturenoteform(request.POST)
 
@@ -187,7 +194,7 @@ def lecturenote(request):
         if lecturenote_form.is_valid():
             lecturenote_form.save()
             # return validatedates(request, course_form)
-            return HttpResponse("you have made a successful post request")  
+            return HttpResponseRedirect(reverse('index'))  
 
         # The following will take place when the form is NOT valid
         else:
@@ -201,7 +208,7 @@ def lecturenote(request):
 
 
 @login_required(login_url='login')
-def comment(request):
+def comment_add(request):
     comment_form = commentform(request.POST or None)
     if request.method == 'POST':
         comment_form = commentform(request.POST)
@@ -210,7 +217,7 @@ def comment(request):
         if comment_form.is_valid():
             comment_form.save()
             # return validatedates(request, course_form)
-            return HttpResponse("you have made a successful post request")  
+            return HttpResponseRedirect(reverse('index')) 
 
         # The following will take place when the form is NOT valid
         else:
@@ -222,8 +229,21 @@ def comment(request):
                 "commentform": comment_form,
             })
 
+
 @login_required(login_url='login')
-def assignment(request):
+def assignment_view(request):
+    current_user = request.user
+    sections = Section.objects.get(student = current_user)
+
+    assignments = Assignment.objects.filter(section_id = sections.id)
+    return render(request, "learn/assignment_view.html", {
+                "assignments": assignments
+            })
+
+
+
+@login_required(login_url='login')
+def assignment_add(request):
     assignment_form = assignmentform(request.POST or None)
 
     if request.method == 'POST':
@@ -233,7 +253,7 @@ def assignment(request):
         if assignment_form.is_valid():
             assignment_form.save()
             # return validatedates(request, course_form)
-            return HttpResponse("you have made a successful post request")  
+            return HttpResponseRedirect(reverse('index'))  
 
         # The following will take place when the form is NOT valid
         else:
@@ -246,7 +266,7 @@ def assignment(request):
             })
 
 @login_required(login_url='login')
-def submission(request):
+def submission_add(request):
     submission_form = submissionform(request.POST or None)
 
     if request.method == 'POST':
@@ -256,7 +276,7 @@ def submission(request):
         if submission_form.is_valid():
             submission_form.save()
             # return validatedates(request, course_form)
-            return HttpResponse("you have made a successful post request")  
+            return HttpResponseRedirect(reverse('index'))  
 
         # The following will take place when the form is NOT valid
         else:
@@ -268,8 +288,29 @@ def submission(request):
                 "submissionform": submission_form,
             })
 
+
+
 @login_required(login_url='login')
-def mark(request):
+def submission_view(request):
+    current_user = request.user
+    submissions = Submission.objects.filter(teacher = current_user)
+    return render(request, "learn/submission_view.html", {
+                "submissions": submissions
+            })
+
+
+@login_required(login_url='login')
+def mark_view(request):
+    current_user = request.user
+    marks = Mark.objects.filter(student = current_user)
+    return render(request, "learn/mark_view.html", {
+                "marks": marks
+            })
+
+
+
+@login_required(login_url='login')
+def mark_add(request):
     mark_form = markform(request.POST or None)
 
     if request.method == 'POST':
@@ -279,7 +320,7 @@ def mark(request):
         if mark_form.is_valid():
             mark_form.save()
             # return validatedates(request, course_form)
-            return HttpResponse("you have made a successful post request")  
+            return HttpResponseRedirect(reverse('index'))  
 
         # The following will take place when the form is NOT valid
         else:
@@ -340,6 +381,7 @@ def register(request):
             parent_id = None
         
         is_teacher = request.POST['is_teacher']
+        is_student = request.POST['is_student']
         # parent_selected = request.POST["parent_id"]
         # print(f"{parent_selected}")
 

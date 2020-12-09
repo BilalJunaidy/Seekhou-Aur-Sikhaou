@@ -10,7 +10,7 @@
     
 <hr>
 <h3>Lecture Note Form</h3>
-<form action = "{% url 'lecturenote' %}" method = "POST">
+<form action = "{% url 'create_lecturenote' %}" method = "POST">
     {% csrf_token %}
     <div class="container">
         <div class="row">

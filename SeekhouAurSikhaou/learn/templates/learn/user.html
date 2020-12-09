@@ -5,13 +5,13 @@
 
 <h3>User Form</h3>
 
-
+<h3>Please ensure that the username is also your email address</h3>
 {% if message %}
 <div>{{ message }}</div>
 {% endif %}
 
 
-<form action = "{% url 'index' %}" method = "POST">
+<form action = "{% url 'admin_create_user' %}" method = "POST">
     {% csrf_token %}
     <div class="container">
         <div class="row">

@@ -1,0 +1,31 @@
+{% extends "learn/layout.html" %}
+
+
+{% block body %}
+    
+
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+
+
+
+<h4>The following are all of the submissions made to your inbox</h4>
+<hr>
+{% for item in submissions %}
+
+        <h5>Submission ID: {{item.id}}</h5>
+        <h5>Submission Student: {{item.student}}</h5>
+        <h5>Submission title: {{item.title}}</h5>
+        <h5>Submission Description: {{item.description}}</h5>
+        <h5>Submission Assignment ID: {{item.assignment}}</h5>
+        <h5>Submission time: {{item.start_date}}</h5>
+
+    <hr>
+    <br>
+{% endfor %}
+
+{% endblock %}
+
+        
