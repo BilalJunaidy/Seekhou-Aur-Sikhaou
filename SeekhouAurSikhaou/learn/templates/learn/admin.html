@@ -1,0 +1,17 @@
+{% extends "learn/layout.html" %}
+
+
+{% block body %}
+    
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+    
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'admin_create_user' %}">Create User</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'admin_create_course' %}">Create Course</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'admin_create_section' %}">Create Section</a>
+    
+{% endblock %}
+
+        

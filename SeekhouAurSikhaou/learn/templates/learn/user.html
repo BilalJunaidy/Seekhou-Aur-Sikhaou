@@ -1,0 +1,33 @@
+{% extends "learn/layout.html" %}
+
+{% block body %}
+    
+
+<h3>User Form</h3>
+
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+
+
+<form action = "{% url 'index' %}" method = "POST">
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+        {% for field in userform  %}
+          <div class="form-group">
+            <b>{{ field.label_tag }}</b>  {{ field }}  {{field.errors}}
+          </div>
+        {% endfor %}
+        </div>  
+      </div>
+
+      
+    <input class="btn btn-primary" type="submit" value="Register">
+</form>
+    
+
+{% endblock %}
+
+        

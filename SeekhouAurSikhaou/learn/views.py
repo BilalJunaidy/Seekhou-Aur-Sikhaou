@@ -4,28 +4,39 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.db import IntegrityError
+from django.utils import timezone
 
 
+from .models import User, Course, Section, Lecture, Attendance, Lecture_Note, Comment, Assignment, Submission, Mark
 from .forms import userform, courseform, sectionform, lectureform, attendanceform, lecturenoteform, commentform, assignmentform, submissionform, markform
 from .helpers import validateusers
 # , validatedates
 
 # Create your views here.
 
-# @login_required(login_url='login')
+
+
+@login_required(login_url='login')
 def index(request):
+    if request.user.is_staff:
+        return HttpResponseRedirect('admin')
+    else:
+        return render(request, "learn/index.html")
+        
+        # if request.user.type == 'TEACHER':
+        #     return render(request, "learn/index.html")
+
+
+
+@login_required(login_url='login')
+def admin(request):
+    return render(request, "learn/admin.html")
+
+
+@login_required(login_url='login')
+def user(request):
 
     user_form = userform(request.POST or None)
-    course_form = courseform(request.POST or None)
-    section_form = sectionform(request.POST or None)
-    lecture_form = lectureform(request.POST or None)
-    attendance_form = attendanceform(request.POST or None)
-    lecturenote_form = lecturenoteform(request.POST or None)
-    comment_form = commentform(request.POST or None)
-    assignment_form = assignmentform(request.POST or None)
-    submission_form = submissionform(request.POST or None)
-    mark_form = markform(request.POST or None)
-
     if request.method == 'POST':
         
         # This two step validation process for the submitted form is very hacky in my opinion and I don't like it.
@@ -40,26 +51,42 @@ def index(request):
 
         # The following will take place when the form is NOT valid
         else:
-            return render(request, "learn/index.html", {
+            return render(request, "learn/user.html", {
                 "userform": user_form
             })
         
     # The following gets rendered when the client sends a GET request to the 'home/' route
-    return render(request, "learn/index.html", {
+    return render(request, "learn/user.html", {
         "userform":user_form,
-        "courseform":course_form,
-        "sectionform":section_form,
-        "lectureform": lecture_form,
-        "attendanceform":attendance_form,
-        "lecturenoteform":lecturenote_form,
-        "commentform":comment_form,
-        "assignmentform":assignment_form,
-        "submissionform":submission_form,
-        "markform":mark_form,
     })
 
 
-def course(request):
+@login_required(login_url='login')
+def courses(request):
+    Courses_objects = Course.objects.filter(Status=True)
+    print(type(Courses_objects))
+    # return HttpResponse(f'{Courses_objects} - {len(Courses_objects)}')
+    return render(request, "learn/sections.html", {
+        "courses": Courses_objects
+    })
+    
+
+@login_required(login_url='login')
+def course(request, course_id):
+    activesections = Section.objects.filter(course_id = course_id, status = True)
+    archivedsections = Section.objects.filter(course_id = course_id, status = False)
+    current_course = Course.objects.get(pk = course_id)
+    return render(request, "learn/section.html", {
+        "activesections": activesections,
+        "archivedsections":archivedsections,
+        "course": current_course
+
+    })
+    # return HttpResponse(f"id is {course_id}")
+
+
+@login_required(login_url='login')
+def course_add(request):
     if request.method == 'POST':
         course_form = courseform(request.POST)
 
@@ -71,16 +98,25 @@ def course(request):
 
         # The following will take place when the form is NOT valid
         else:
-            return render(request, "learn/course.html", {
+            return render(request, "learn/courseadd.html", {
                 "courseform": course_form,
             })
 
-    return render(request, "learn/course.html", {
+    return render(request, "learn/courseadd.html", {
         "courseform": courseform()
     })
 
 
-def section(request):
+@login_required(login_url='login')
+def section(request, section_id):
+    assignments = Assignment.objects.filter(section_id = section_id)
+    lectures = Lecture.objects.filter(section_id = section_id)
+    return HttpResponse(f'oh bhains - {section_id}')
+
+
+
+@login_required(login_url='login')
+def section_add(request):
     if request.method == 'POST':
         section_form = sectionform(request.POST)
 
@@ -92,15 +128,15 @@ def section(request):
 
         # The following will take place when the form is NOT valid
         else:
-            return render(request, "learn/section.html", {
+            return render(request, "learn/sectionadd.html", {
                 "sectionform": section_form,
             })
 
-    return render(request, "learn/section.html", {
+    return render(request, "learn/sectionadd.html", {
         "sectionform": sectionform()
     })
 
-
+@login_required(login_url='login')
 def lecture(request):
     if request.method == 'POST':
         lecture_form = lectureform(request.POST)
@@ -121,7 +157,7 @@ def lecture(request):
         "lectureform": lectureform()
     })
 
-
+@login_required(login_url='login')
 def attendance(request):
     if request.method == 'POST':
         attendance_form = attendanceform(request.POST)
@@ -142,7 +178,7 @@ def attendance(request):
         "attendanceform": attendanceform()
     })
 
-
+@login_required(login_url='login')
 def lecturenote(request):
     if request.method == 'POST':
         lecturenote_form = lecturenoteform(request.POST)
@@ -164,7 +200,7 @@ def lecturenote(request):
     })
 
 
-
+@login_required(login_url='login')
 def comment(request):
     comment_form = commentform(request.POST or None)
     if request.method == 'POST':
@@ -186,7 +222,7 @@ def comment(request):
                 "commentform": comment_form,
             })
 
-
+@login_required(login_url='login')
 def assignment(request):
     assignment_form = assignmentform(request.POST or None)
 
@@ -209,7 +245,7 @@ def assignment(request):
                 "assignmentform": assignment_form,
             })
 
-
+@login_required(login_url='login')
 def submission(request):
     submission_form = submissionform(request.POST or None)
 
@@ -232,7 +268,7 @@ def submission(request):
                 "submissionform": submission_form,
             })
 
-
+@login_required(login_url='login')
 def mark(request):
     mark_form = markform(request.POST or None)
 
@@ -254,7 +290,6 @@ def mark(request):
     return render(request, "learn/mark.html", {
                 "markform": mark_form,
             })
-
 
 
 def login_view(request):
@@ -287,6 +322,26 @@ def logout_view(request):
 def register(request):
     if request.method == "POST":
         email = request.POST["email"]
+        username = request.POST["email"]
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
+        age = request.POST["age"]
+        grade_level = request.POST["grade_level"]
+        gender = request.POST["gender"]
+        type = request.POST["type"]
+        if type == "ADMIN":
+            is_staff = True
+        else:
+            is_staff = False
+        
+        if type == 'STUDENT':
+            parent_id = request.POST["parent_id"]
+        else:
+            parent_id = None
+        
+        is_teacher = request.POST['is_teacher']
+        # parent_selected = request.POST["parent_id"]
+        # print(f"{parent_selected}")
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -298,8 +353,28 @@ def register(request):
 
         # Attempt to create new user
         try:
+            # user = User.objects.create_user(email, email, password, first_name, username, last_name, age, grade_level, type, is_staff)
+            # user = User.objects.create(email, password, first_name, username, last_name, age, grade_level, type, is_staff)
             user = User.objects.create_user(email, email, password)
             user.save()
+            latest_user = User.objects.all().latest('id')
+            try:
+                latest_user.first_name = first_name
+                latest_user.last_name = last_name
+                latest_user.age = age
+                latest_user.type = gender
+                latest_user.type = type
+                latest_user.grade_level = grade_level
+                latest_user.is_staff = is_staff
+                # latest_user.date_joined = str(timezone.now)
+                latest_user.parent_id = parent_id
+                latest_user.is_teacher = is_teacher
+                latest_user.save()
+            except (TypeError, NameError) as e:
+                return render(request, "learn/register.html", {
+                    "message": e
+                })
+
         except IntegrityError as e:
             print(e)
             return render(request, "learn/register.html", {
@@ -308,5 +383,8 @@ def register(request):
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
-        return render(request, "learn/register.html")
+        parents = User.objects.filter(type='PARENT')
+        return render(request, "learn/register.html", {
+            "parents": parents
+        })
         

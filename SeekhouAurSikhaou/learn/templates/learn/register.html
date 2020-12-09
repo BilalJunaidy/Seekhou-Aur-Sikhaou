@@ -1,5 +1,17 @@
 {% extends "learn/layout.html" %}
 
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('#parent_id_select').onchange = function() {
+            document.querySelector('#parent_id_select').style.display = block;
+        }
+    });
+</script>
+{% endblock %}
+
+
 {% block body %}
 
     <h2>Register</h2>
@@ -10,15 +22,104 @@
 
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
+        <!-- <div class="form-group">
+            <input class="form-control" type="email" name="email" placeholder="Email Address">
+        </div> -->
+
+
+
+        <div class="form-group">
+            <input class="form-control" type="text" name="first_name" placeholder="First Name">
+        </div>
+
+        <div class="form-group">
+            <input class="form-control" type="text" name="last_name" placeholder="Last Name">
+        </div>
+
+        <div class="form-group">
+            <input class="form-control" type="number" name="age" placeholder="Age">
+        </div>
+<!-- 
+        <div class="form-group">
+            <input class="form-control" type="number" name="grade_level" placeholder="Grade Level">
+        </div> -->
+
+        <div class="form-group">
+            <p>Select user gender</p>
+            <!-- <p>Please select one of the options below in MALE OR FEMALE</p> -->
+        <select name="gender">
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
+        </select>
+            <!-- <input class="form-control" type="text" name="gender" placeholder="Gender"> -->
+        </div>
+
+        <div class="form-group">
+            <p>Select user type</p>
+        <select name="type">
+            <option value="ADMIN">Admin</option>
+            <option value="TEACHER">Teacher</option>
+            <option value="STUDENT">Student</option>
+            <option value="PARENT">Parent</option>
+        </select>
+            <!-- <p>Please type either ADMIN, PARENT, TEACHER OR STUDENT</p>
+            <input class="form-control" type="text" name="type" placeholder="Type of User"> -->
+        </div>
+
+        <div class="form-group">
+            <p> Only select a parent if you are registering a student</p>
+        <select id = 'parent_id_select' name="parent_id">
+            <option value="blank">Please only select parent IF you are registering a student</option>
+            {% for parent in parents  %}
+            <option value={{parent.id}}>{{parent}}</option>
+          </div>
+        {% endfor %}
+        </select>
+        </div>
+            <!-- <input class="form-control" type="text" name="gender" placeholder="Gender"> -->
+        
+
+        <div class="form-group">
+            <p>Select user grade level</p>
+        <select name="grade_level">
+            <option value="GRADE5">Grade 5</option>
+            <option value="GRADE6">Grade 6</option>
+            <option value="GRADE7">Grade 7</option>
+            <option value="GRADE8">Grade 8</option>
+            <option value="GRADE9">Grade 9</option>
+            <option value="GRADE10">Grade 10</option>
+            <option value="GRADE11">Grade 11</option>
+            <option value="GRADE12">Grade 12</option>
+            <option value="GRADE13">Grade 13</option>
+        </select>
+            <!-- <p>Please type either ADMIN, PARENT, TEACHER OR STUDENT</p>
+            <input class="form-control" type="text" name="type" placeholder="Type of User"> -->
+        </div>
+
+
+        <div class="form-group">
+            <p>Select user grade level</p>
+        <select name=is_teacher>
+            <option value="True">Yes</option>
+            <option value="False">No</option>
+        </select>
+
+        </div>
+
+
         <div class="form-group">
             <input class="form-control" type="email" name="email" placeholder="Email Address">
         </div>
+
+
         <div class="form-group">
             <input class="form-control" type="password" name="password" placeholder="Password">
         </div>
+
         <div class="form-group">
             <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
         </div>
+
         <input class="btn btn-primary" type="submit" value="Register">
     </form>
     

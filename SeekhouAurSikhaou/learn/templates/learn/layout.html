@@ -5,19 +5,55 @@
     <head>
         <title>{% block title %}Learn{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link rel="stylesheet" href="{% static 'learn/styles.css' %}">
+        <link rel="stylesheet" href="{% static 'learn/main.css' %}">
         {% block script %}
         {% endblock %}
     </head>
     <body>
         
-    <h2>Welcome {{ request.user.username }} to your account</h2>
 
-    <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
-    <button class="btn btn-sm btn-outline-primary" id="compose">Compose</button>
-    <button class="btn btn-sm btn-outline-primary" id="sent">Sent</button>
-    <button class="btn btn-sm btn-outline-primary" id="archived">Archived</button>
+    <body>
+        
+            <h1>Seekhou Aur Sikhaou</h1>
+            <hr>
+          </header>
+        </div>
+        {% if user.is_authenticated %}
+        <h2>Welcome {{ request.user.first_name }} to your account</h2>
+        <h5>Welcome to the {{request.user.type.title}} portal</h5>
+        {% else %}
+        {% endif %}
+        <hr>
+
+
+        {% if user.is_authenticated and user.is_staff %}
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'admin' %}">Admin Home</a>
     <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
+
+
+    {% else %}
+    {% endif %}
+
+
+
+
+    {% if user.is_authenticated and not user.is_staff %}
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'index' %}">Home</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'courses' %}">Courses</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
+
+    {% else %}
+    {% endif %}
+
+    {% if user.is_authenticated and user.is_teacher %}
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'index' %}">Create Lecture</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'index' %}">Create Assignment</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'index' %}">View submissions</a>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'index' %}">Grade Assignments</a>
+
+    {% else %}
+    {% endif %}
+
     <hr>
         <div class="container">
             {% block body %}

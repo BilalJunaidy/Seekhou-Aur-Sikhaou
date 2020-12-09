@@ -8,24 +8,45 @@
 {% if message %}
 <div>{{ message }}</div>
 {% endif %}
-    
-<hr>
-<h3>Section Form</h3>
-<form action = "{% url 'section' %}" method = "POST">
-    {% csrf_token %}
-    <div class="container">
-        <div class="row">
-        {% for field in sectionform  %}
-          <!-- <div class="col-sm-6"> -->
-            <div class="form-group">
-            <b>{{ field.label_tag }}</b> {{ field }} {{field.errors}}
-          </div>
-        {% endfor %}
-        </div>  
-      </div>
-    <input class="btn btn-primary" type="submit" value="Register">
-</form>
 
+
+
+<h4>The following are the Active Sections for {{course}}</h4>
+<hr>
+{% for item in activesections %}
+    <a href="{% url 'section' item.id %}">
+        <h5>Section ID: {{item.id}}</h5>
+        <h5>Section Name: {{item.name}}</h5>
+        <h5>Section Description: {{item.description}}</h5>
+        <h5>Section Teacher ID: {{item.teacher_id}}</h5>
+        <h5>Section Start Date: {{item.start_date}}</h5>
+        <h5>Section End Date: {{item.end_date}}</h5>
+        
+        <h5>Section Academic Year: {{item.academic_year}}</h5>
+        <h5>Section Academic Term: {{item.academic_term}}</h5>
+    </a>
+    <hr>
+    <br>
+{% endfor %}
+
+
+<h4>The following are the Archived Sections for {{course}}</h4>
+<hr>
+{% for item in archivedsections %}
+    <a href="{% url 'section' item.id %}">
+        <h5>Section ID: {{item.id}}</h5>
+        <h5>Section Name: {{item.name}}</h5>
+        <h5>Section Description: {{item.description}}</h5>
+        <h5>Section Teacher ID: {{item.teacher_id}}</h5>
+        <h5>Section Start Date: {{item.start_date}}</h5>
+        <h5>Section End Date: {{item.end_date}}</h5>
+        
+        <h5>Section Academic Year: {{item.academic_year}}</h5>
+        <h5>Section Academic Term: {{item.academic_term}}</h5>
+    </a>
+    <hr>
+    <br>
+{% endfor %}
 {% endblock %}
 
         

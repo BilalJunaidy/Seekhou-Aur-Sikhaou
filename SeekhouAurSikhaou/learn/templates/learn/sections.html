@@ -1,0 +1,28 @@
+{% extends "learn/layout.html" %}
+
+
+{% block body %}
+    
+
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+
+
+{% for item in courses %}
+    <a href="{% url 'sections' item.id %}">
+        <h5>Course ID: {{item.id}}</h5>
+        <h5>Course Name: {{item.name}}</h5>
+        <h5>Course Code: {{item.code}}</h5>
+        <h5>Course Description: {{item.description}}</h5>
+        <h5>Course Start Date: {{item.start_date}}</h5>
+        <h5>Course End Date: {{item.end_date}}</h5>
+    </a>
+    <hr>
+    <br>
+{% endfor %}
+
+{% endblock %}
+
+        

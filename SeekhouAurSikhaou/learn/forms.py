@@ -20,7 +20,14 @@ class userform(ModelForm):
     class Meta:
         model = User
         # fields = ['username','password','first_name','last_name','email','type','parent', 'grade_level', 'profile_image']
-        fields = ['username','password','first_name','last_name','email','type','parent', 'grade_level', 'gender', 'age']
+        fields = ['username','password','first_name','last_name','email','type','parent', 'grade_level', 'gender', 'age', 'is_teacher']
+    
+    def __init__(self, *args, **kwargs):
+        super(userform, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+        })
         
 class courseform(ModelForm):
     class Meta:

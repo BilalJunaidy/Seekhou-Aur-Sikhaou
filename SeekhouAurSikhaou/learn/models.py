@@ -6,6 +6,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import gettext_lazy as _
 import datetime 
 
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+
 # Create your models here.
 
 class User(AbstractUser):
@@ -32,18 +35,18 @@ class User(AbstractUser):
         ('FEMALE','Female'),
     ]
     # profile_image = models.ImageField(null=False, blank=False)
-    grade_level = models.CharField(max_length=7, choices=GRADE_OPTIONS, blank=False, default='GRADE5')
-    type = models.CharField(max_length=7, choices=TYPE_OPTIONS, default='STUDENT', blank=False)
+    grade_level = models.CharField(max_length=7, choices=GRADE_OPTIONS, blank=True, default='GRADE5')
+    type = models.CharField(max_length=7, choices=TYPE_OPTIONS, default='STUDENT', blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name="users")
-    gender = models.CharField(max_length=6, choices=GENDER_OPTIONS, blank=False, default='MALE')
-    age = models.IntegerField(validators=[MinValueValidator(7), MaxValueValidator(100)])
+    gender = models.CharField(max_length=6, choices=GENDER_OPTIONS, null=True, blank=True, default='MALE')
+    age = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(7), MaxValueValidator(100)])
+    is_teacher = models.BooleanField(_('Check box if the user is a teacher'), default = False)
 
     def __str__(self):
-        return f"{self.type} - {self.username}"
+        return f"{self.type} - {self.first_name} {self.last_name}"
 
 
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
+
 
 
 # The following were my unsuccesful attemtps at validating the start and end date fields. 
